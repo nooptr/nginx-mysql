@@ -52,6 +52,9 @@ COPY    virtual.conf /etc/nginx/conf.d/virtual.conf
 RUN     mkdir -p /srv/nginx && \
         chmod 777 /srv/nginx
 
+COPY	./bin/start.sh /usr/local/bin/start.sh
+RUN	chmod +x /usr/local/bin/start.sh
+
 # Make user centos
 RUN useradd -m centos
 RUN echo "centos:centos" | chpasswd
@@ -61,5 +64,5 @@ RUN gpasswd -a centos wheel
 # Docker側でlistenするポート番号を指定
 EXPOSE  80 22
 
-# Launch nginx when launching the container
-CMD ["nginx", "-g", "daemon off;"]
+# Launch some service when launching the container
+CMD ["/usr/local/bin/start.sh"]
