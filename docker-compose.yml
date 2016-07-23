@@ -1,18 +1,20 @@
-nginx:
+app:
   build: ./nginx
   ports:
-    - "8082:80"
+    - "5080:80"
+    - "5022:22"
+    - "50443:443"
   links:
     - db
   volumes_from:
     - appdata
-  environment:
-    - VIRTUAL_HOST=admin.apdev.local
+  #environment:
+  #  - VIRTUAL_HOST=web.apdev.local
 
 appdata:
   image: tianon/true
   volumes:
-    - ./admin/:/srv/nginx/admin.apdev.local
+    - ./web/:/srv/www/web
 
 db:
   build: ./mysql
@@ -23,8 +25,8 @@ db:
   environment:
     - MYSQL_ROOT_PASSWORD=root
     - MYSQL_DATABASE=dev
-    - MYSQL_USER=admin
-    - MYSQL_PASSWORD=admin
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=root
 
 dbdata:
   image: tianon/true

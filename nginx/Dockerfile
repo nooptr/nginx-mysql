@@ -16,7 +16,7 @@ RUN     yum -y \
         git \
         openssh-server \
         vim \
-        mysql \
+        mysql-server \
         epel*
 
 ADD     remi-release-6.rpm  /usr/local/src/remi-release-6.rpm
@@ -49,10 +49,10 @@ RUN     rm -rf /etc/nginx/conf.d/default.conf && \
         rm -rf /etc/nginx/conf.d/virtual.conf
 COPY    virtual.conf /etc/nginx/conf.d/virtual.conf
 
-RUN     mkdir -p /srv/nginx && \
-        chmod 777 /srv/nginx
+RUN     mkdir -p /srv/www/ && \
+        chmod 777 /srv/www/
 
-COPY	./bin/start.sh /usr/local/bin/start.sh
+COPY	bin/start.sh /usr/local/bin/start.sh
 RUN	chmod +x /usr/local/bin/start.sh
 
 # Make user centos
@@ -62,7 +62,9 @@ RUN echo "centos:centos" | chpasswd
 RUN gpasswd -a centos wheel
 
 # Docker側でlistenするポート番号を指定
-EXPOSE  80 22
+EXPOSE  80 22 443
+
+WORKDIR /srv/www/web
 
 # Launch some service when launching the container
 CMD ["/usr/local/bin/start.sh"]
